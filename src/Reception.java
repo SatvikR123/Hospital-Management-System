@@ -3,17 +3,19 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Reception {
+public class Reception extends JFrame{
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Reception::new);
     }
 
     public Reception() {
+
+
         JFrame frame = new JFrame("Reception Panel");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
         frame.setLayout(new BorderLayout());
-
+        frame.setLocationRelativeTo(null);
         // Header Label
         JLabel header = new JLabel("Reception Panel", JLabel.CENTER);
         header.setFont(new Font("Arial", Font.BOLD, 18));
@@ -31,7 +33,7 @@ public class Reception {
 
         // Buttons with consistent style
         String[] buttonLabels = {
-                "Add Patient", "Update Patient Details", "Patients Info",
+                "Add Patient", "Update Patient Details", "View Patients Info",
                 "Generate Bill", "Book Appointment", "Reschedule",
                 "Cancel Appointments", "View Doctor Details", "View Treatment Log"
         };
@@ -81,6 +83,10 @@ public class Reception {
                 topFrame.dispose();  // Close the Reception window
             } else if (action.equals("Update Patient Details")){
                 new Update_Patient();
+            } else if (action.equals("View Patients Info")){
+                new View_Patient_Info();
+            } else if(action.equals("View Doctor Details")){
+                new View_Doc_Details();
             }
             else {
                 JOptionPane.showMessageDialog(null, "Functionality for: " + action);

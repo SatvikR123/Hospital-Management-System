@@ -38,7 +38,7 @@ public class Add_Patient extends JFrame implements ActionListener {
         panel.add(combobox);
 
         // Number
-        JLabel labelNumber = new JLabel("Patient_Id: ");
+        JLabel labelNumber = new JLabel("ID_Number: ");
         labelNumber.setBounds(35, 111, 200, 14);
         labelNumber.setFont(new Font("Tahoma", Font.BOLD, 14));
         labelNumber.setForeground(Color.WHITE);
@@ -154,14 +154,14 @@ public class Add_Patient extends JFrame implements ActionListener {
                 String gender = r1.isSelected() ? "Male" : "Female";
 
                 String idType = (String) combobox.getSelectedItem();
-                String patient_id = txtNumber.getText();
+                String ID_Number = txtNumber.getText();
                 String name = txtName.getText();
                 String ageText = txtAge.getText();
                 String depositText = txtDeposit.getText();
                 String contact = txtContact.getText();
 
                 // Validate inputs
-                if (patient_id.isEmpty() || name.isEmpty() || ageText.isEmpty() || depositText.isEmpty() || contact.isEmpty()) {
+                if (ID_Number.isEmpty() || name.isEmpty() || ageText.isEmpty() || depositText.isEmpty() || contact.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please fill all required fields!");
                     return;
                 }
@@ -169,10 +169,10 @@ public class Add_Patient extends JFrame implements ActionListener {
                 int age = Integer.parseInt(ageText);
                 double deposit = Double.parseDouble(depositText);
 
-                String query = "INSERT INTO Patient_Info (ID_Type, Patient_id, Name, Gender, Age, Deposit, Contact) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                String query = "INSERT INTO Patient_Info (ID_Type, ID_Number, Name, Gender, Age, Deposit, Contact) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 PreparedStatement pstmt = c.getConnection().prepareStatement(query);
                 pstmt.setString(1, idType);
-                pstmt.setString(2, patient_id);
+                pstmt.setString(2, ID_Number);
                 pstmt.setString(3, name);
                 pstmt.setString(4, gender);
                 pstmt.setInt(5, age);

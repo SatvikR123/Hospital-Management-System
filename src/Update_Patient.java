@@ -11,7 +11,6 @@ public class Update_Patient extends JFrame implements ActionListener {
         // Frame setup
         setTitle("Update Patient Information");
         setSize(900, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Centers the window
 
         JPanel panel = new JPanel();
@@ -99,7 +98,7 @@ public class Update_Patient extends JFrame implements ActionListener {
 
             try {
                 Conn c = new Conn();
-                String query = "UPDATE Patient_Info SET name = ?, contact = ? WHERE Patient_id = ?";
+                String query = "UPDATE Patient_Info SET name = ?, contact = ? WHERE ID_Number = ?";
                 PreparedStatement pst = c.getConnection().prepareStatement(query);
                 pst.setString(1, newName);
                 pst.setString(2, newContact);
