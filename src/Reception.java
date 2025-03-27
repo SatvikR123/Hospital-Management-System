@@ -9,8 +9,6 @@ public class Reception extends JFrame{
     }
 
     public Reception() {
-
-
         JFrame frame = new JFrame("Reception Panel");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
@@ -27,15 +25,14 @@ public class Reception extends JFrame{
 
         // Panel for Buttons
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(4, 3, 10, 10)); // 4 rows, 3 columns
+        buttonPanel.setLayout(new GridLayout(5, 3, 10, 10)); // 4 rows, 3 columns
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         buttonPanel.setBackground(Color.WHITE);
 
         // Buttons with consistent style
         String[] buttonLabels = {
                 "Add Patient", "Update Patient Details", "View Patients Info",
-                "Generate Bill", "Book Appointment", "Reschedule",
-                "Cancel Appointments", "View Doctor Details", "View Treatment Log"
+                "Generate Bill", "Appointments", "View Doctor Details", "View Treatment Log"
         };
 
         for (String text : buttonLabels) {
@@ -85,8 +82,10 @@ public class Reception extends JFrame{
                 new Update_Patient();
             } else if (action.equals("View Patients Info")){
                 new View_Patient_Info();
-            } else if(action.equals("View Doctor Details")){
+            } else if (action.equals("View Doctor Details")){
                 new View_Doc_Details();
+            } else if (action.equals("Appointments")){
+                new AppointmentSystem();
             }
             else {
                 JOptionPane.showMessageDialog(null, "Functionality for: " + action);
