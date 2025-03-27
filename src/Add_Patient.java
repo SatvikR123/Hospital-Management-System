@@ -1,18 +1,15 @@
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
+import java.sql.*;
 
-public class New_Patient extends JFrame implements ActionListener {
-    
+public class Add_Patient extends JFrame implements ActionListener {
     JComboBox<String> combobox;
-    JTextField txtNumber, txtName, txtCountry, txtDeposit, txtContact, txtMedicalHistory;
+    JTextField txtNumber, txtName, txtAge, txtDeposit, txtContact;
     JRadioButton r1, r2;
     JButton b1, b2;
 
-    public New_Patient() {
-        
+    public Add_Patient() {
         // Panel Setup
         JPanel panel = new JPanel();
         panel.setBounds(5, 5, 840, 540);
@@ -27,7 +24,7 @@ public class New_Patient extends JFrame implements ActionListener {
         panel.add(label);
 
         // ID Label and ComboBox
-        JLabel labelID = new JLabel("ID: ");
+        JLabel labelID = new JLabel("ID_Type: ");
         labelID.setBounds(35, 76, 200, 14);
         labelID.setFont(new Font("Tahoma", Font.BOLD, 14));
         labelID.setForeground(Color.WHITE);
@@ -41,7 +38,7 @@ public class New_Patient extends JFrame implements ActionListener {
         panel.add(combobox);
 
         // Number
-        JLabel labelNumber = new JLabel("Number: ");
+        JLabel labelNumber = new JLabel("Patient_Id: ");
         labelNumber.setBounds(35, 111, 200, 14);
         labelNumber.setFont(new Font("Tahoma", Font.BOLD, 14));
         labelNumber.setForeground(Color.WHITE);
@@ -94,9 +91,9 @@ public class New_Patient extends JFrame implements ActionListener {
         lblAge.setForeground(Color.WHITE);
         panel.add(lblAge);
 
-        txtCountry = new JTextField();
-        txtCountry.setBounds(271, 231, 150, 20);
-        panel.add(txtCountry);
+        txtAge = new JTextField();
+        txtAge.setBounds(271, 231, 150, 20);
+        panel.add(txtAge);
 
         // Deposit
         JLabel lblDeposit = new JLabel("Deposit: ");
@@ -120,17 +117,6 @@ public class New_Patient extends JFrame implements ActionListener {
         txtContact.setBounds(271, 320, 150, 20);
         panel.add(txtContact);
 
-        // Medical History
-        JLabel lblMH = new JLabel("Medical History: ");
-        lblMH.setBounds(35, 360, 200, 14);
-        lblMH.setFont(new Font("Tahoma", Font.BOLD, 14));
-        lblMH.setForeground(Color.WHITE);
-        panel.add(lblMH);
-
-        txtMedicalHistory = new JTextField();
-        txtMedicalHistory.setBounds(271, 360, 150, 20);
-        panel.add(txtMedicalHistory);
-
         // Submit Button
         b1 = new JButton("Submit");
         b1.setBounds(100, 430, 120, 30);
@@ -149,36 +135,55 @@ public class New_Patient extends JFrame implements ActionListener {
         b2.addActionListener(this);
         panel.add(b2);
 
+        add(panel);
+
         setSize(850, 550);
-        setVisible(true);
         setLayout(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
     }
 
     public static void main(String[] args) {
-        new New_Patient();
+        new Add_Patient();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == b1) {
-            Conn c = new Conn();
-            String gender = r1.isSelected() ? "Male" : "Female";
-
-            String idType = (String) combobox.getSelectedItem();
-            String number = txtNumber.getText();
-            String name = txtName.getText();
-            String country = txtCountry.getText();
-            String deposit = txtDeposit.getText();
-            String contact = txtContact.getText();
-            String medicalHistory = txtMedicalHistory.getText();
-
             try {
-                String query = "INSERT INTO Patient_Info VALUES ('" + idType + "', '" + number + "', '" + name + "', '" + gender + "', '" + country + "', '" + deposit + "', '" + contact + "', '" + medicalHistory + "');";
-                c.statement.executeUpdate(query);
+                Conn c = new Conn();
+                String gender = r1.isSelected() ? "Male" : "Female";
+
+                String idType = (String) combobox.getSelectedItem();
+                String patient_id = txtNumber.getText();
+                String name = txtName.getText();
+                String ageText = txtAge.getText();
+                String depositText = txtDeposit.getText();
+                String contact = txtContact.getText();
+
+                // Validate inputs
+                if (patient_id.isEmpty() || name.isEmpty() || ageText.isEmpty() || depositText.isEmpty() || contact.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please fill all required fields!");
+                    return;
+                }
+
+                int age = Integer.parseInt(ageText);
+                double deposit = Double.parseDouble(depositText);
+
+                String query = "INSERT INTO Patient_Info (ID_Type, Patient_id, Name, Gender, Age, Deposit, Contact) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                PreparedStatement pstmt = c.getConnection().prepareStatement(query);
+                pstmt.setString(1, idType);
+                pstmt.setString(2, patient_id);
+                pstmt.setString(3, name);
+                pstmt.setString(4, gender);
+                pstmt.setInt(5, age);
+                pstmt.setDouble(6, deposit);
+                pstmt.setString(7, contact);
+                pstmt.executeUpdate();
+
                 JOptionPane.showMessageDialog(null, "Added Successfully");
                 setVisible(false);
             } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
                 ex.printStackTrace();
             }
         }

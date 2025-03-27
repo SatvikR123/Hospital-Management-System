@@ -1,18 +1,54 @@
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.sql.SQLException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 public class Conn {
-    java.sql.Connection connection;
-    Statement statement;
+    private Connection connection;
+    private Statement statement;
 
-
-    public Conn(){
+    public Conn() {
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital_management_system", "root","hardik310805");
+            // Load properties from file
+            Properties props = new Properties();
+            FileInputStream fis = new FileInputStream("db_config.properties");
+            props.load(fis);
 
+            String url = props.getProperty("db.url");
+            String user = props.getProperty("db.user");
+            String password = props.getProperty("db.password");
+
+            // Establish Connection
+            connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
 
-        } catch(Exception e){
+            fis.close();
+        } catch (IOException e) {
+            System.out.println("Error loading database configuration.");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Database connection failed.");
+            e.printStackTrace();
+        }
+    }
+
+    public Statement getStatement() {
+        return statement;
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void closeConnection() {
+        try {
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
+        } catch (SQLException e) {
+            System.out.println("Error closing the connection.");
             e.printStackTrace();
         }
     }
