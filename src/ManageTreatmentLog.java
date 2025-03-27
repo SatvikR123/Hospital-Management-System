@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ManageTreatmentLog extends JFrame {
     private JTable treatmentTable;
-    private JComboBox<Patient_Item> patientCombo;
+    private JComboBox<PatientItem> patientCombo;
     private JButton viewBtn, addBtn, editBtn, deleteBtn;
     private TreatmentManager treatmentManager;
 
@@ -97,7 +97,7 @@ public class ManageTreatmentLog extends JFrame {
             try (Statement stmt = c.getConnection().createStatement();
                  ResultSet rs = stmt.executeQuery(query)) {
                 while (rs.next()) {
-                    patientCombo.addItem(new Patient_Item(
+                    patientCombo.addItem(new PatientItem(
                             rs.getInt("patient_id"),
                             rs.getString("Name"),
                             0
@@ -110,7 +110,7 @@ public class ManageTreatmentLog extends JFrame {
     }
 
     private void loadTreatments() {
-        Patient_Item selectedPatient = (Patient_Item) patientCombo.getSelectedItem();
+        PatientItem selectedPatient = (PatientItem) patientCombo.getSelectedItem();
         if (selectedPatient == null) {
             showError("Please select a patient");
             return;
@@ -147,7 +147,7 @@ public class ManageTreatmentLog extends JFrame {
     }
 
     private void showAddTreatmentDialog() {
-        Patient_Item patient = (Patient_Item) patientCombo.getSelectedItem();
+        PatientItem patient = (PatientItem) patientCombo.getSelectedItem();
         if (patient == null) {
             showError("Please select a patient first");
             return;
@@ -250,26 +250,5 @@ public class ManageTreatmentLog extends JFrame {
 
     public static void main(String[] args) {
         new ManageTreatmentLog();
-    }
-}
-
-class Patient_Item {
-    private int patientId;
-    private String name;
-    private int doctorId;
-
-    public Patient_Item(int patientId, String name, int doctorId) {
-        this.patientId = patientId;
-        this.name = name;
-        this.doctorId = doctorId;
-    }
-
-    @Override
-    public String toString() {
-        return name + " (ID: " + patientId + ")";
-    }
-
-    public int getPatientId() {
-        return patientId;
     }
 }

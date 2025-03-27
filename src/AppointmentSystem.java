@@ -9,7 +9,7 @@ import java.util.Date;
 public class AppointmentSystem extends JFrame {
     private JButton bookBtn, cancelBtn;
     private JTable appointmentTable;
-    private JComboBox<PatientItem> patientCombo;
+    private JComboBox<Patient_Item> patientCombo;
     private JComboBox<String> doctorCombo;
     private JTextField dateField, timeField, reasonField;
 
@@ -122,7 +122,7 @@ public class AppointmentSystem extends JFrame {
 
         // Set up patient combo listener after components are initialized
         patientCombo.addActionListener(e -> {
-            PatientItem selectedPatient = (PatientItem)patientCombo.getSelectedItem();
+            Patient_Item selectedPatient = (Patient_Item)patientCombo.getSelectedItem();
             if (selectedPatient != null) {
                 loadDoctorForPatient(selectedPatient.getDoctorId());
             }
@@ -148,7 +148,7 @@ public class AppointmentSystem extends JFrame {
             try (Statement stmt = c.getConnection().createStatement();
                  ResultSet rs = stmt.executeQuery(query)) {
                 while (rs.next()) {
-                    patientCombo.addItem(new PatientItem(
+                    patientCombo.addItem(new Patient_Item(
                             rs.getInt("patient_id"),
                             rs.getString("Name"),
                             rs.getInt("doctor_id")
@@ -304,12 +304,12 @@ public class AppointmentSystem extends JFrame {
     }
 }
 
-class PatientItem {
+class Patient_Item {
     private int patientId;
     private String name;
     private int doctorId;
 
-    public PatientItem(int patientId, String name, int doctorId) {
+    public Patient_Item(int patientId, String name, int doctorId) {
         this.patientId = patientId;
         this.name = name;
         this.doctorId = doctorId;
