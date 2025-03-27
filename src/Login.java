@@ -80,7 +80,7 @@ public class Login extends JFrame implements ActionListener {
 
                 // If user is found, open the next window (test class)
                 if (resultSet.next()) {
-                    new test();
+                    new Reception();
                     setVisible(false); // Hide login window
                 } else {
                     // Show error message if credentials are invalid
