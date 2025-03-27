@@ -9,11 +9,12 @@ public class Reception extends JFrame{
     }
 
     public Reception() {
-        JFrame frame = new JFrame("Reception Panel");
+        JFrame frame = new JFrame("Reception");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
         frame.setLayout(new BorderLayout());
         frame.setLocationRelativeTo(null);
+
         // Header Label
         JLabel header = new JLabel("Reception Panel", JLabel.CENTER);
         header.setFont(new Font("Arial", Font.BOLD, 18));
@@ -32,9 +33,8 @@ public class Reception extends JFrame{
         // Buttons with consistent style
         String[] buttonLabels = {
                 "Add Patient", "Update Patient Details", "View Patients Info",
-                "Generate Bill", "Appointments", "View Doctor Details", "View Treatment Log"
+                "Generate Bill", "Appointments", "View Doctor Details", "Manage Treatment Log"
         };
-
         for (String text : buttonLabels) {
             JButton button = new JButton(text);
             button.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -86,6 +86,8 @@ public class Reception extends JFrame{
                 new View_Doc_Details();
             } else if (action.equals("Appointments")){
                 new AppointmentSystem();
+            } else if (action.equals("Manage Treatment Log")){
+                new ManageTreatmentLog();
             }
             else {
                 JOptionPane.showMessageDialog(null, "Functionality for: " + action);
