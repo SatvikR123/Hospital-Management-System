@@ -88,6 +88,8 @@ public class Reception extends JFrame{
                 new AppointmentSystem();
             } else if (action.equals("Manage Treatment Log")){
                 new ManageTreatmentLog();
+            } else if (action.equals("Generate Bill")){
+                new HospitalBillingSystem();
             }
             else {
                 JOptionPane.showMessageDialog(null, "Functionality for: " + action);
