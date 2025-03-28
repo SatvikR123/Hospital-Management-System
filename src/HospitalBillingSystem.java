@@ -27,7 +27,6 @@ public class HospitalBillingSystem extends JFrame {
 
         setTitle("Hospital Billing System");
         setSize(1100, 750); // Increased size slightly
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
         // Initialize database connection
@@ -182,7 +181,6 @@ public class HospitalBillingSystem extends JFrame {
         styleButton(viewBillsBtn, new Color(75, 0, 130)); // Purple color
         viewBillsBtn.addActionListener(new ViewBillsListener());
         buttonActionPanel.add(viewBillsBtn);
-
     }
 
     private JTextField createNonEditableField() {
@@ -501,34 +499,142 @@ public class HospitalBillingSystem extends JFrame {
 
                 ResultSet rs = conn.getConnection().createStatement().executeQuery(query);
 
-                // Create a table model to display the bills
                 DefaultTableModel model = new DefaultTableModel(
-                        new Object[]{"Bill ID", "Patient Name", "Issue Date", "Total", "Paid", "Status"}, 0);
+                        new Object[]{"Bill ID", "Patient Name", "Issue Date", "Total", "Paid", "Status", "Balance"}, 0) {
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        return false;
+                    }
+                };
 
                 while (rs.next()) {
+                    double total = rs.getDouble("total_amount");
+                    double paid = rs.getDouble("paid_amount");
+                    double balance = total - paid;
+
                     model.addRow(new Object[]{
                             rs.getInt("bill_id"),
                             rs.getString("Name"),
                             rs.getDate("issue_date"),
-                            currencyFormat.format(rs.getDouble("total_amount")),
-                            currencyFormat.format(rs.getDouble("paid_amount")),
-                            rs.getString("status")
+                            currencyFormat.format(total),
+                            currencyFormat.format(paid),
+                            rs.getString("status"),
+                            currencyFormat.format(balance)
                     });
                 }
 
-                // Create and show the table in a dialog
                 JTable billsTable = new JTable(model);
                 billsTable.setFont(new Font("Segoe UI", Font.PLAIN, 12));
                 billsTable.setRowHeight(25);
 
+                // Add double-click listener to make payments
+                billsTable.addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent e) {
+                        if (e.getClickCount() == 2) {
+                            int row = billsTable.getSelectedRow();
+                            int billId = (int) billsTable.getValueAt(row, 0);
+                            double total = Double.parseDouble(billsTable.getValueAt(row, 3).toString().replaceAll("[^\\d.]", ""));
+                            double paid = Double.parseDouble(billsTable.getValueAt(row, 4).toString().replaceAll("[^\\d.]", ""));
+                            double balance = total - paid;
+
+                            if (balance > 0) {
+                                makeAdditionalPayment(billId, balance);
+                            } else {
+                                JOptionPane.showMessageDialog(HospitalBillingSystem.this,
+                                        "This bill is already fully paid",
+                                        "Payment Info", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        }
+                    }
+                });
+
                 JScrollPane scrollPane = new JScrollPane(billsTable);
-                scrollPane.setPreferredSize(new Dimension(800, 400));
+                scrollPane.setPreferredSize(new Dimension(900, 400));
 
                 JOptionPane.showMessageDialog(HospitalBillingSystem.this, scrollPane,
-                        "All Bills", JOptionPane.PLAIN_MESSAGE);
+                        "All Bills - Double click to make payment", JOptionPane.PLAIN_MESSAGE);
 
             } catch (SQLException ex) {
                 showError("Error loading bills: " + ex.getMessage());
+            }
+        }
+    }
+
+    private void makeAdditionalPayment(int billId, double balanceDue) {
+        try {
+            // Get payment amount
+            String input = JOptionPane.showInputDialog(
+                    this,
+                    "Balance Due: " + currencyFormat.format(balanceDue) +
+                            "\nEnter payment amount:",
+                    "Additional Payment",
+                    JOptionPane.PLAIN_MESSAGE);
+
+            if (input == null || input.trim().isEmpty()) return;
+
+            double payment = Double.parseDouble(input);
+
+            if (payment <= 0) {
+                showError("Payment amount must be positive");
+                return;
+            }
+
+            if (payment > balanceDue) {
+                int confirm = JOptionPane.showConfirmDialog(
+                        this,
+                        "Payment amount exceeds balance due. Accept overpayment?",
+                        "Confirm Overpayment",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (confirm != JOptionPane.YES_OPTION) return;
+            }
+
+            // Update database
+            conn.getConnection().setAutoCommit(false);
+
+            // Get current paid amount
+            String getQuery = "SELECT paid_amount, total_amount FROM Bills WHERE bill_id = ?";
+            PreparedStatement getStmt = conn.getConnection().prepareStatement(getQuery);
+            getStmt.setInt(1, billId);
+            ResultSet rs = getStmt.executeQuery();
+
+            if (rs.next()) {
+                double currentPaid = rs.getDouble("paid_amount");
+                double totalAmount = rs.getDouble("total_amount");
+                double newPaid = currentPaid + payment;
+                String newStatus = newPaid >= totalAmount ? "Paid" : "Partially Paid";
+
+                // Update payment
+                String updateQuery = "UPDATE Bills SET paid_amount = ?, status = ? WHERE bill_id = ?";
+                PreparedStatement updateStmt = conn.getConnection().prepareStatement(updateQuery);
+                updateStmt.setDouble(1, newPaid);
+                updateStmt.setString(2, newStatus);
+                updateStmt.setInt(3, billId);
+                updateStmt.executeUpdate();
+
+                conn.getConnection().commit();
+
+                JOptionPane.showMessageDialog(this,
+                        "Payment of " + currencyFormat.format(payment) + " applied to Bill ID: " + billId +
+                                "\nNew paid amount: " + currencyFormat.format(newPaid) +
+                                "\nStatus: " + newStatus,
+                        "Payment Successful",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (NumberFormatException ex) {
+            showError("Please enter a valid number");
+        } catch (SQLException ex) {
+            try {
+                conn.getConnection().rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            showError("Database error: " + ex.getMessage());
+        } finally {
+            try {
+                conn.getConnection().setAutoCommit(true);
+            } catch (SQLException e1) {
+                e1.printStackTrace();
             }
         }
     }
