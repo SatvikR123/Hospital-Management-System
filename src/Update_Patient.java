@@ -6,6 +6,7 @@ import java.sql.*;
 public class Update_Patient extends JFrame implements ActionListener {
     JButton b1, b2;
     JTextField patientIdField, nameField, contactField;
+    JLabel imageLabel;
 
     public Update_Patient() {
         // Frame setup
@@ -76,6 +77,13 @@ public class Update_Patient extends JFrame implements ActionListener {
         b2.addActionListener(this);
         panel.add(b2);
 
+        // Image Label (Bottom Section)
+        ImageIcon icon = new ImageIcon("C:\\Users\\DELL\\Desktop\\hospital management system\\Hospital-Management-System\\patient info.png"); // Placeholder image file
+        Image img = icon.getImage().getScaledInstance(300, 200, Image.SCALE_SMOOTH);
+        imageLabel = new JLabel(new ImageIcon(img));
+        imageLabel.setBounds(300, 300, 300, 200);
+        panel.add(imageLabel);
+
         setVisible(true);
     }
 
@@ -120,8 +128,7 @@ public class Update_Patient extends JFrame implements ActionListener {
             }
         } else if (e.getSource() == b2) {
             // Back button action
-            this.dispose(); // Close this window
-            // You might want to open a previous window here
+            this.dispose();
         }
     }
 }

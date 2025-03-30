@@ -34,6 +34,14 @@ public class AppointmentSystem extends JFrame {
         cancelBtn = new JButton("Cancel Appointment");
         appointmentTable = new JTable();
 
+        // Adding Image at Top Right
+        ImageIcon icon = new ImageIcon("C:\\Users\\DELL\\Desktop\\hospital management system\\Hospital-Management-System\\patient appintment.png"); // Replace with your actual image path
+        Image img = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        JLabel imageLabel = new JLabel(new ImageIcon(img));
+        imageLabel.setBounds(850, 10, 100, 100); // Adjust position accordingly
+        panel.add(imageLabel);
+
+
         // Title Label
         JLabel titleLabel = new JLabel("APPOINTMENT MANAGEMENT");
         titleLabel.setBounds(350, 20, 400, 30);

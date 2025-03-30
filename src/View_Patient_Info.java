@@ -30,6 +30,13 @@ public class View_Patient_Info extends JFrame {
         titleLabel.setForeground(Color.WHITE);
         panel.add(titleLabel);
 
+        // Adding Image at Top Right
+        ImageIcon icon = new ImageIcon("C:\\Users\\DELL\\Desktop\\hospital management system\\Hospital-Management-System\\all patient info.png");
+        Image img = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        JLabel imageLabel = new JLabel(new ImageIcon(img));
+        imageLabel.setBounds(880, 10, 100, 100); // Positioned at top-right
+        panel.add(imageLabel);
+
         // Search Panel
         JPanel searchPanel = new JPanel();
         searchPanel.setBounds(50, 70, 900, 40);
@@ -58,7 +65,6 @@ public class View_Patient_Info extends JFrame {
 
         // Table setup with your columns
         String[] columnNames = {
-
                 "ID Type", "ID_Number", "Name", "Gender",
                 "Age", "Deposit", "Contact"
         };
@@ -71,7 +77,6 @@ public class View_Patient_Info extends JFrame {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                // Auto-detect column types for proper sorting
                 if (columnIndex == 4) return Integer.class; // Age
                 if (columnIndex == 5) return Double.class;  // Deposit
                 return String.class;
@@ -83,15 +88,6 @@ public class View_Patient_Info extends JFrame {
         patientTable.setRowHeight(25);
         patientTable.setAutoCreateRowSorter(true);
         patientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        // Set column widths
-        patientTable.getColumnModel().getColumn(0).setPreferredWidth(80);  // ID Type
-        patientTable.getColumnModel().getColumn(1).setPreferredWidth(100); // ID Number
-        patientTable.getColumnModel().getColumn(2).setPreferredWidth(150); // Name
-        patientTable.getColumnModel().getColumn(3).setPreferredWidth(70);  // Gender
-        patientTable.getColumnModel().getColumn(4).setPreferredWidth(50);  // Age
-        patientTable.getColumnModel().getColumn(5).setPreferredWidth(80); // Deposit
-        patientTable.getColumnModel().getColumn(6).setPreferredWidth(120); // Contact
 
         JScrollPane scrollPane = new JScrollPane(patientTable);
         scrollPane.setBounds(50, 130, 900, 450); // Adjusted size
@@ -150,7 +146,7 @@ public class View_Patient_Info extends JFrame {
         DefaultTableModel model = (DefaultTableModel) patientTable.getModel();
         model.setRowCount(0);
 
-        try  {
+        try {
             Conn c = new Conn();
 
             String query = "SELECT * FROM Patient_Info WHERE " +
