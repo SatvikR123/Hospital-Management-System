@@ -121,17 +121,25 @@ public class Add_Patient extends JFrame implements ActionListener {
         // Submit Button
         b1 = new JButton("Submit");
         b1.setBounds(100, 430, 120, 30);
+        b1.setFont(new Font("Tahoma", Font.BOLD, 14));
+        b1.setForeground(Color.WHITE);
+        b1.setBackground(Color.BLACK);
         b1.addActionListener(this);
         panel.add(b1);
 
         // Back Button
         b2 = new JButton("Back");
         b2.setBounds(260, 430, 120, 30);
+        b2.setFont(new Font("Tahoma", Font.BOLD, 14));
+        b2.setForeground(Color.WHITE);
+        b2.setBackground(Color.BLACK);
         b2.addActionListener(this);
         panel.add(b2);
 
+        add(panel);
+
         // Image Label (Right Corner)
-        ImageIcon icon = new ImageIcon("C:\\Users\\DELL\\Desktop\\hospital management system\\Hospital-Management-System\\patient image.png");
+        ImageIcon icon = new ImageIcon("C:\\Users\\DELL\\Desktop\\hospitaljava\\Hospital-Management-System\\patient image.png");
         Image img = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH); // Adjust size if needed
         imageLabel = new JLabel(new ImageIcon(img));
         imageLabel.setBounds(530, 80, 250, 250); // Adjust position and size
@@ -150,8 +158,46 @@ public class Add_Patient extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == b1) {
+            try {
+                Conn c = new Conn();
+                String gender = r1.isSelected() ? "Male" : "Female";
+
+                String idType = (String) combobox.getSelectedItem();
+                String ID_Number = txtNumber.getText();
+                String name = txtName.getText();
+                String ageText = txtAge.getText();
+                String depositText = txtDeposit.getText();
+                String contact = txtContact.getText();
+
+                // Validate inputs
+                if (ID_Number.isEmpty() || name.isEmpty() || ageText.isEmpty() || depositText.isEmpty() || contact.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Please fill all required fields!");
+                    return;
+                }
+
+                int age = Integer.parseInt(ageText);
+                double deposit = Double.parseDouble(depositText);
+
+                String query = "INSERT INTO Patient_Info (ID_Type, ID_Number, Name, Gender, Age, Deposit, Contact) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                PreparedStatement pstmt = c.getConnection().prepareStatement(query);
+                pstmt.setString(1, idType);
+                pstmt.setString(2, ID_Number);
+                pstmt.setString(3, name);
+                pstmt.setString(4, gender);
+                pstmt.setInt(5, age);
+                pstmt.setDouble(6, deposit);
+                pstmt.setString(7, contact);
+                pstmt.executeUpdate();
+
+                JOptionPane.showMessageDialog(null, "Added Successfully");
+                setVisible(false);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+                ex.printStackTrace();
+            }
             JOptionPane.showMessageDialog(null, "Patient added successfully!");
         }
+
         if (e.getSource() == b2) {
             setVisible(false);
         }

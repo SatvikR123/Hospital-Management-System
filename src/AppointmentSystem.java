@@ -35,16 +35,16 @@ public class AppointmentSystem extends JFrame {
         appointmentTable = new JTable();
 
         // Adding Image at Top Right
-        ImageIcon icon = new ImageIcon("C:\\Users\\DELL\\Desktop\\hospital management system\\Hospital-Management-System\\patient appintment.png"); // Replace with your actual image path
-        Image img = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon("C:\\Users\\DELL\\Desktop\\hospitaljava\\Hospital-Management-System\\patient appointment.png"); // Replace with your actual image path
+        Image img = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
         JLabel imageLabel = new JLabel(new ImageIcon(img));
-        imageLabel.setBounds(850, 10, 100, 100); // Adjust position accordingly
+        imageLabel.setBounds(700, 10, 250, 250);  // Adjusted x-position and size // Adjust position accordingly
         panel.add(imageLabel);
 
 
         // Title Label
         JLabel titleLabel = new JLabel("APPOINTMENT MANAGEMENT");
-        titleLabel.setBounds(350, 20, 400, 30);
+        titleLabel.setBounds(250, 20, 400, 30);  // You can adjust this if needed
         titleLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
         titleLabel.setForeground(Color.WHITE);
         panel.add(titleLabel);
@@ -331,4 +331,5 @@ class Patient_Item {
     public int getDoctorId() {
         return doctorId;
     }
+
 }

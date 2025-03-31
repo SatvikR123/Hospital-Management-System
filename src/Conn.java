@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -14,7 +15,7 @@ public class Conn {
         try {
             // Load properties from file
             Properties props = new Properties();
-            FileInputStream fis = new FileInputStream("db_config.properties");
+            FileInputStream fis = new FileInputStream("C:\\Users\\DELL\\Desktop\\hospitaljava\\Hospital-Management-System\\db_config.properties");
             props.load(fis);
 
             String url = props.getProperty("db.url");
@@ -33,6 +34,7 @@ public class Conn {
             System.out.println("Database connection failed.");
             e.printStackTrace();
         }
+
     }
 
     public Statement getStatement() {
