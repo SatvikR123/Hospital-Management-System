@@ -89,6 +89,17 @@ public class View_Patient_Info extends JFrame {
         patientTable.setAutoCreateRowSorter(true);
         patientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+
+        // Set column widths
+        patientTable.getColumnModel().getColumn(0).setPreferredWidth(80);  // ID Type
+        patientTable.getColumnModel().getColumn(1).setPreferredWidth(100); // ID Number
+        patientTable.getColumnModel().getColumn(2).setPreferredWidth(150); // Name
+        patientTable.getColumnModel().getColumn(3).setPreferredWidth(70);  // Gender
+        patientTable.getColumnModel().getColumn(4).setPreferredWidth(50);  // Age
+        patientTable.getColumnModel().getColumn(5).setPreferredWidth(80); // Deposit
+        patientTable.getColumnModel().getColumn(6).setPreferredWidth(120); // Contact
+
+
         JScrollPane scrollPane = new JScrollPane(patientTable);
         scrollPane.setBounds(50, 130, 900, 450); // Adjusted size
         panel.add(scrollPane);
