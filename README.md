@@ -88,22 +88,9 @@ Hospital-Management-System/
 └── README.md
 ```
 
-## Screenshots
-
-The application includes several key interfaces:
-- Patient Information Management
-- Patient Treatment Tracking
-- Appointment Scheduling
-- Billing System
-- Doctor Management
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Support
 
